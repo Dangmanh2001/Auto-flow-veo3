@@ -6,7 +6,7 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        max-width: 600px;
+        max-width: 800px;
         margin: 50px auto;
         padding: 20px;
       }
@@ -42,13 +42,80 @@
         border: 1px solid #ddd;
         border-radius: 4px;
       }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        display: none;
+      }
+      .result.show {
+        display: block;
+      }
+      .result-info {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        border-radius: 4px;
+      }
+      .uploaded-images {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 15px;
+      }
+      .image-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        background-color: white;
+      }
+      .image-card img {
+        max-width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .image-info {
+        font-size: 12px;
+        color: #666;
+        text-align: left;
+      }
+      .image-info p {
+        margin: 5px 0;
+        word-break: break-all;
+      }
+      .error {
+        color: red;
+        padding: 10px;
+        background-color: #ffebee;
+        border-left: 4px solid #f44336;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .success {
+        color: green;
+        padding: 10px;
+        background-color: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
     <h1>Gửi Nhiều File Ảnh</h1>
 
     <!-- Form gửi file -->
-    <form action="/api" method="POST" enctype="multipart/form-data">
+    <form
+      id="uploadForm"
+      action="/api"
+      method="POST"
+      enctype="multipart/form-data"
+    >
       <!-- Input để chọn nhiều file ảnh -->
       <div class="form-group">
         <label for="images">Chọn ảnh (có thể chọn nhiều):</label>
@@ -68,39 +135,108 @@
       </div>
     </form>
 
-    <!-- Hiển thị preview ảnh đã chọn -->
+    <!-- Hiển thị preview ảnh đã chọn trước khi upload -->
     <div class="preview" id="preview"></div>
 
+    <button type="button" id="clearAll" style="margin-top: 10px; display: none">
+      Xóa tất cả ảnh
+    </button>
+    <!-- Kết quả upload -->
+    <div class="result" id="result">
+      <h3>📤 Kết quả Upload:</h3>
+
+      <!-- Hiển thị các ảnh đã upload -->
+      <div class="uploaded-images" id="uploadedImages"></div>
+    </div>
+
     <script>
-      // Preview ảnh khi chọn
-      document
-        .getElementById("images")
-        .addEventListener("change", function (e) {
-          const preview = document.getElementById("preview");
-          preview.innerHTML = ""; // Clear preview cũ
+      const input = document.getElementById("images");
+      const preview = document.getElementById("preview");
+      const clearAllBtn = document.getElementById("clearAll");
 
-          const files = this.files;
+      let selectedFiles = [];
 
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
+      // Khi chọn ảnh
+      input.addEventListener("change", function () {
+        selectedFiles = Array.from(this.files);
+        renderPreview();
+      });
 
-            // Kiểm tra xem có phải file ảnh không
-            if (file.type.startsWith("image/")) {
-              const reader = new FileReader();
+      // Render preview
+      function renderPreview() {
+        preview.innerHTML = "";
 
-              reader.onload = function (e) {
-                const img = document.createElement("img");
-                img.src = e.target.result;
-                preview.appendChild(img);
-              };
+        if (selectedFiles.length === 0) {
+          clearAllBtn.style.display = "none";
+          return;
+        }
 
-              reader.readAsDataURL(file);
-            }
-          }
+        clearAllBtn.style.display = "inline-block";
 
-          // Hiển thị số lượng file
-          console.log(`Đã chọn ${files.length} file`);
+        selectedFiles.forEach((file, index) => {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const wrapper = document.createElement("div");
+            wrapper.style.display = "inline-block";
+            wrapper.style.position = "relative";
+            wrapper.style.margin = "10px";
+
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.maxWidth = "150px";
+
+            const removeBtn = document.createElement("button");
+            removeBtn.innerText = "✕";
+            removeBtn.style.position = "absolute";
+            removeBtn.style.top = "5px";
+            removeBtn.style.right = "5px";
+            removeBtn.style.background = "red";
+            removeBtn.style.color = "white";
+            removeBtn.style.border = "none";
+            removeBtn.style.cursor = "pointer";
+
+            removeBtn.onclick = () => removeImage(index);
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(removeBtn);
+
+            preview.appendChild(wrapper);
+          };
+
+          reader.readAsDataURL(file);
         });
+
+        updateInputFiles();
+      }
+
+      // Xóa 1 ảnh
+      function removeImage(index) {
+        selectedFiles.splice(index, 1);
+        renderPreview();
+      }
+
+      // Xóa tất cả
+      clearAllBtn.addEventListener("click", () => {
+        selectedFiles = [];
+
+        // reset input file
+        input.value = "";
+
+        preview.innerHTML = "";
+        clearAllBtn.style.display = "none";
+      });
+
+      // Cập nhật lại input files
+      function updateInputFiles() {
+        const dataTransfer = new DataTransfer();
+
+        selectedFiles.forEach((file) => {
+          dataTransfer.items.add(file);
+        });
+
+        input.files = dataTransfer.files;
+      }
     </script>
   </body>
 </html>

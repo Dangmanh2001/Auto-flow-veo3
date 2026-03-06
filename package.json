@@ -10,6 +10,7 @@
     "axios": "^1.13.6",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^17.3.1",
     "ejs": "^4.0.1",
     "express": "~4.16.1",
     "fs": "^0.0.1-security",
@@ -19,11 +20,15 @@
     "morgan": "~1.9.1",
     "multer": "^2.1.1",
     "mysql": "^2.18.1",
-    "mysql2": "^3.18.2",
+    "mysql2": "^3.19.0",
     "nodemon": "^3.1.14",
     "puppeteer": "^24.37.5",
     "puppeteer-core": "^24.37.5",
     "sequelize": "^6.37.7",
+    "sql": "^0.78.0",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.5"
   }
 }

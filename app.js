@@ -17,11 +17,15 @@ const apiRouter = require("./routes/api");
 
 var app = express();
 
-// const sequelize = new Sequelize("mysql", "root", "dangmanh2001", {
-//   host: "localhost",
-//   dialect: "mysql",
-// });
-// console.log(sequelize);
+// Tạo thư mục uploads nếu chưa tồn tại
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("✓ Thư mục uploads đã được tạo");
+}
+
+// Serve static files
+app.use("/uploads", express.static("uploads"));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
