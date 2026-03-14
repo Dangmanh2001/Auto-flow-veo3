@@ -1,0 +1,25 @@
+2026/03/14-08:21:21.583 4d38 Reusing MANIFEST C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Default\IndexedDB\https_labs.google_0.indexeddb.leveldb/MANIFEST-000001
+2026/03/14-08:21:21.584 4d38 Recovering log #17
+2026/03/14-08:21:21.585 4d38 Reusing old log C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Default\IndexedDB\https_labs.google_0.indexeddb.leveldb/000017.log 
+2026/03/14-08:21:21.585 4d38 Delete type=2 #16
+2026/03/14-08:21:22.091 4028 Level-0 table #22: started
+2026/03/14-08:21:22.096 4028 Level-0 table #22: 1316 bytes OK
+2026/03/14-08:21:22.100 4028 Delete type=0 #17
+2026/03/14-08:21:22.100 4d38 Manual compaction at level-0 from '\x00\x09\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0a\x00\x00\x00' @ 0 : 0; will stop at '\x00\x09\x00\x00\x05' @ 462 : 1
+2026/03/14-08:21:22.101 4d38 Compacting 1@0 + 1@1 files
+2026/03/14-08:21:22.105 4d38 Generated table #23@0: 142 keys, 3255 bytes
+2026/03/14-08:21:22.105 4d38 Compacted 1@0 + 1@1 files => 3255 bytes
+2026/03/14-08:21:22.107 4d38 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/03/14-08:21:22.108 4d38 Delete type=2 #22
+2026/03/14-08:21:22.109 4d38 Manual compaction at level-0 from '\x00\x09\x00\x00\x05' @ 462 : 1 .. '\x00\x0a\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/03/14-08:21:42.310 4028 Level-0 table #25: started
+2026/03/14-08:21:42.313 4028 Level-0 table #25: 1171 bytes OK
+2026/03/14-08:21:42.316 4028 Delete type=2 #19
+2026/03/14-08:21:42.316 4028 Delete type=0 #21
+2026/03/14-08:21:42.317 5f9c Manual compaction at level-0 from '\x00\x0a\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0b\x00\x00\x00' @ 0 : 0; will stop at '\x00\x0a\x00\x00\x05' @ 505 : 1
+2026/03/14-08:21:42.317 5f9c Compacting 1@0 + 1@1 files
+2026/03/14-08:21:42.321 5f9c Generated table #26@0: 143 keys, 3269 bytes
+2026/03/14-08:21:42.322 5f9c Compacted 1@0 + 1@1 files => 3269 bytes
+2026/03/14-08:21:42.324 5f9c compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/03/14-08:21:42.324 5f9c Delete type=2 #25
+2026/03/14-08:21:42.325 5f9c Manual compaction at level-0 from '\x00\x0a\x00\x00\x05' @ 505 : 1 .. '\x00\x0b\x00\x00\x00' @ 0 : 0; will stop at (end)

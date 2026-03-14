@@ -1,9 +1,11 @@
 var express = require("express");
 var router = express.Router();
-const apiControllers = require("../controllers/api.controllers");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const TextToVideoControllers = require("../controllers/TextToVideo.controllers");
+const ImageToVideoController = require("../controllers/ImageToVideo.controller");
+const IngredientsToVideo = require("../controllers/IngredientsToVideo");
 
 // Cấu hình storage
 const storage = multer.diskStorage({
@@ -45,9 +47,30 @@ const upload = multer({
   },
 });
 
-/* GET home page. */
-router.get("/", apiControllers.veo3Api);
+/* Tạo video bằng text */
+router.get("/", TextToVideoControllers.TextToVideoveo3Api);
 // Thêm middleware upload.array() để xử lý nhiều file với field name là "images"
-router.post("/", upload.array("images"), apiControllers.veo3ApiPost);
+router.post(
+  "/",
+  upload.array("images"),
+  TextToVideoControllers.TextToVideoveo3ApiPost,
+);
+/* Tạo video bằng Ảnh */
+router.get("/imageToVideo", ImageToVideoController.ImageToVideo);
+
+router.post(
+  "/imageToVideo",
+  upload.fields([
+    { name: "start_images[]", maxCount: 10 },
+    { name: "end_images[]", maxCount: 10 },
+  ]),
+  ImageToVideoController.ImageToVideoPost,
+);
+/* Tạo video thành phần */
+router.get("/IngredientsToVideo", IngredientsToVideo.IngredientsToVideo);
+router.post("/IngredientsToVideo", IngredientsToVideo.IngredientsToVideoPost);
+/* Gọi api gemini để phân tích video */
+router.get("/gemini", TextToVideoControllers.gemini);
+router.post("/gemini", TextToVideoControllers.postGemini);
 
 module.exports = router;

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Flow - Ingredients</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
+    />
+    <style>
+      :root {
+        --bg-dark: #131517;
+        --card-bg: #1e2124;
+        --border-color: #33373b;
+        --text-main: #e2e2e2;
+        --text-dim: #9aa0a6;
+        --accent-blue: #4d94ff;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: "Segoe UI", sans-serif;
+        padding: 40px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        width: 600px;
+      }
+
+      /* Khối Ingredient chính */
+      .ingredient-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .header-icons {
+        display: flex;
+        gap: 10px;
+        color: var(--text-dim);
+      }
+
+      .btn-icon {
+        cursor: pointer;
+        font-size: 18px !important;
+      }
+
+      .btn-icon:hover {
+        color: #fff;
+      }
+
+      /* Vùng upload ảnh */
+      .upload-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .upload-box {
+        border: 1px dashed var(--border-color);
+        border-radius: 8px;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 12px;
+        transition: 0.2s;
+      }
+
+      .upload-box:hover {
+        border-color: var(--accent-blue);
+        background: rgba(77, 148, 255, 0.05);
+      }
+
+      .upload-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      /* Textarea nhập prompt */
+      .prompt-box {
+        width: 100%;
+        background-color: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        color: var(--text-main);
+        font-size: 13px;
+        resize: none;
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      /* Nút thêm Ingredient */
+      .btn-add-wrapper {
+        border: 1px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        color: var(--text-dim);
+        transition: 0.2s;
+      }
+
+      .btn-add-wrapper:hover {
+        border-color: var(--accent-blue);
+        color: #fff;
+      }
+
+      .footer-action {
+        margin-top: 20px;
+      }
+
+      .btn-start {
+        background: #fff;
+        color: #000;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form
+        id="renderForm"
+        action="/api/IngredientsToVideo"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div id="ingredientList">
+          <div class="ingredient-card">
+            <div class="card-header">
+              <span class="card-title">Ingredient 1</span>
+              <div class="header-icons">
+                <span
+                  class="material-symbols-outlined btn-icon btn-delete"
+                  onclick="removeIngredient(this)"
+                  >close</span
+                >
+              </div>
+            </div>
+
+            <div class="upload-row">
+              <div
+                class="upload-box"
+                onclick="this.querySelector('input').click()"
+              >
+                <span class="material-symbols-outlined">upload</span>
+                <span>Upload</span>
+                <input
+                  type="file"
+                  name="images_1[]"
+                  hidden
+                  onchange="handlePreview(this)"
+                />
+              </div>
+              <div
+                class="upload-box"
+                onclick="this.querySelector('input').click()"
+              >
+                <span class="material-symbols-outlined">upload</span>
+                <span>Upload</span>
+                <input
+                  type="file"
+                  name="images_1[]"
+                  hidden
+                  onchange="handlePreview(this)"
+                />
+              </div>
+              <div
+                class="upload-box"
+                onclick="this.querySelector('input').click()"
+              >
+                <span class="material-symbols-outlined">upload</span>
+                <span>Upload</span>
+                <input
+                  type="file"
+                  name="images_1[]"
+                  hidden
+                  onchange="handlePreview(this)"
+                />
+              </div>
+            </div>
+
+            <textarea
+              name="prompts[]"
+              class="prompt-box"
+              rows="3"
+              placeholder="Nhập prompt cho ingredient này..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="btn-add-wrapper" onclick="addIngredient()">
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 32px; display: block; margin-bottom: 10px"
+            >add</span
+          >
+          <span>Thêm Ingredient</span>
+        </div>
+
+        <div class="footer-action">
+          <button type="submit" class="btn-start">Bắt đầu</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      let count = 1;
+
+      function addIngredient() {
+        count++;
+        const list = document.getElementById("ingredientList");
+        const newCard = document.createElement("div");
+        newCard.className = "ingredient-card";
+        newCard.innerHTML = `
+                <div class="card-header">
+                    <span class="card-title">Ingredient ${count}</span>
+                    <div class="header-icons">
+                        <span class="material-symbols-outlined btn-icon" onclick="removeIngredient(this)">close</span>
+                    </div>
+                </div>
+                <div class="upload-row">
+                    ${Array(3)
+                      .fill(
+                        `<div class="upload-box" onclick="this.querySelector('input').click()">
+                        <span class="material-symbols-outlined">upload</span>
+                        <span>Upload</span>
+                        <input type="file" name="images_${count}[]" hidden onchange="handlePreview(this)">
+                    </div>`,
+                      )
+                      .join("")}
+                </div>
+                <textarea name="prompts[]" class="prompt-box" rows="3" placeholder="Nhập prompt cho ingredient này..."></textarea>
+            `;
+        list.appendChild(newCard);
+      }
+
+      function removeIngredient(btn) {
+        const cards = document.querySelectorAll(".ingredient-card");
+        if (cards.length > 1) {
+          btn.closest(".ingredient-card").remove();
+          reindexIngredients(); // Quan trọng: Đánh số lại sau khi xóa
+        } else {
+          alert("Phải có ít nhất một Ingredient!");
+        }
+      }
+      function reindexIngredients() {
+        const cards = document.querySelectorAll(".ingredient-card");
+        cards.forEach((card, index) => {
+          const displayIndex = index + 1;
+          // Cập nhật tiêu đề hiển thị (Ingredient 1, 2, 3...)
+          const title = card.querySelector(".card-title");
+          title.innerText = `Ingredient ${displayIndex}`;
+
+          // Cập nhật thuộc tính name của các input file nếu bạn cần phân biệt theo dòng
+          // Nếu dùng images[] chung cho tất cả thì không cần bước này,
+          // nhưng nếu muốn phân tách theo cụm thì dùng:
+          const inputs = card.querySelectorAll('input[type="file"]');
+          inputs.forEach((input) => {
+            input.name = `images_${displayIndex}[]`;
+          });
+        });
+      }
+      function handlePreview(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          const parent = input.parentElement;
+          reader.onload = function (e) {
+            parent.innerHTML = `<img src="${e.target.result}">
+                                        <input type="file" name="${input.name}" hidden onchange="handlePreview(this)">`;
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
+  </body>
+</html>

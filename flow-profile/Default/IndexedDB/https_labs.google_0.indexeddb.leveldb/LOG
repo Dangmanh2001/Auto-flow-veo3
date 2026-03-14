@@ -1,0 +1,15 @@
+2026/03/14-09:11:06.688 3eec Reusing MANIFEST C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Default\IndexedDB\https_labs.google_0.indexeddb.leveldb/MANIFEST-000001
+2026/03/14-09:11:06.688 3eec Recovering log #24
+2026/03/14-09:11:06.689 3eec Reusing old log C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Default\IndexedDB\https_labs.google_0.indexeddb.leveldb/000024.log 
+2026/03/14-09:11:06.690 3eec Delete type=2 #23
+2026/03/14-09:11:06.706 3bc0 Manual compaction at level-0 from '\x00\x0b\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0c\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/03/14-09:11:24.366 3bc0 Level-0 table #29: started
+2026/03/14-09:11:24.369 3bc0 Level-0 table #29: 1542 bytes OK
+2026/03/14-09:11:24.371 3bc0 Delete type=0 #24
+2026/03/14-09:11:24.372 45f0 Manual compaction at level-0 from '\x00\x0c\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0d\x00\x00\x00' @ 0 : 0; will stop at '\x00\x0c\x00\x00\x05' @ 567 : 1
+2026/03/14-09:11:24.372 45f0 Compacting 1@0 + 1@1 files
+2026/03/14-09:11:24.374 45f0 Generated table #30@0: 147 keys, 3289 bytes
+2026/03/14-09:11:24.375 45f0 Compacted 1@0 + 1@1 files => 3289 bytes
+2026/03/14-09:11:24.376 45f0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/03/14-09:11:24.377 45f0 Delete type=2 #29
+2026/03/14-09:11:24.377 45f0 Manual compaction at level-0 from '\x00\x0c\x00\x00\x05' @ 567 : 1 .. '\x00\x0d\x00\x00\x00' @ 0 : 0; will stop at (end)

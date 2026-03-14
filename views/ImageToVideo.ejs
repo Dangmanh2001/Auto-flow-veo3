@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Flow - Frame Management</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
+    />
+    <style>
+      :root {
+        --bg-dark: #1a1c1e;
+        --card-bg: #212429;
+        --border-color: #3f444c;
+        --text-main: #e2e2e2;
+        --text-dim: #9aa0a6;
+        --accent-blue: #4d94ff;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: "Segoe UI", Roboto, sans-serif;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        width: 850px;
+      }
+
+      .bulk-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 0 10px;
+      }
+
+      .header-controls {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .btn-toggle-end {
+        background: none;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-toggle-end:hover {
+        background: #333;
+      }
+
+      .btn-clear {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 13px;
+      }
+
+      #flowList {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .frame-group {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .images-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .image-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .image-box span {
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+
+      .thumbnail {
+        width: 120px;
+        height: 70px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid var(--border-color);
+        background: #000;
+      }
+
+      .arrow-sep {
+        color: var(--text-dim);
+      }
+
+      .prompt-area {
+        flex-grow: 1;
+        background: #131517;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px;
+        height: 70px;
+        color: #fff;
+        font-size: 14px;
+        resize: none;
+      }
+
+      .btn-delete {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+      }
+
+      /* LOGIC ẨN END FRAME */
+      .hide-end .end-frame-box,
+      .hide-end .arrow-sep {
+        display: none !important;
+      }
+
+      .add-row {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+      .btn-add-frame {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px dashed var(--border-color);
+        background: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .footer {
+        margin-top: 40px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .btn-submit {
+        background: var(--accent-blue);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="mainApp">
+      <form
+        id="renderForm"
+        action="/api/imageToVideo"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="bulk-header">
+          <div class="header-controls">
+            <span>Cấu hình luồng Flow</span>
+            <button
+              type="button"
+              class="btn-toggle-end"
+              onclick="toggleEndFrames()"
+            >
+              <span class="material-symbols-outlined" style="font-size: 18px"
+                >visibility_off</span
+              >
+              Ẩn/Hiện End Frame
+            </button>
+          </div>
+          <button type="button" class="btn-clear" onclick="clearAll()">
+            <span class="material-symbols-outlined">delete_sweep</span> Xóa tất
+            cả
+          </button>
+        </div>
+
+        <div id="flowList">
+          <div class="frame-group">
+            <div class="images-container">
+              <div class="image-box">
+                <span>Start Frame</span>
+                <img
+                  src="https://cdn-media.sforum.vn/storage/app/media/ctvseo_maihue/hinh-nen-1920-1080/hinh-nen-1920-1080-thumbnail.jpg"
+                  class="thumbnail"
+                  onclick="triggerUpload(this)"
+                  style="cursor: pointer"
+                />
+                <input
+                  type="file"
+                  name="start_images[]"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this)"
+                />
+              </div>
+
+              <span class="material-symbols-outlined arrow-sep">sync_alt</span>
+
+              <div class="image-box end-frame-box">
+                <span>End Frame</span>
+                <img
+                  src="https://cdn-media.sforum.vn/storage/app/media/thunguyen/hinh-nen-vui-ve-2.jpg"
+                  class="thumbnail"
+                  onclick="triggerUpload(this)"
+                  style="cursor: pointer"
+                />
+                <input
+                  type="file"
+                  name="end_images[]"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this)"
+                />
+              </div>
+
+              <textarea
+                name="prompts[]"
+                class="prompt-area"
+                placeholder="Nhập prompt..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row">
+          <button type="button" class="btn-add-frame" onclick="addFullFrame()">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
+
+        <div class="footer">
+          <button type="submit" class="btn-submit">
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <script>
+      // Hàm ẩn hiện End Frame
+      function toggleEndFrames() {
+        const app = document.getElementById("mainApp");
+        app.classList.toggle("hide-end");
+      }
+
+      function addFullFrame() {
+        const list = document.getElementById("flowList");
+        const id = Date.now();
+        const frameHTML = `
+            <div class="frame-group extra-frame" id="group-${id}">
+                <button class="btn-delete" onclick="removeFrame(${id})"><span class="material-symbols-outlined">close</span></button>
+                <div class="images-container">
+                                  <div class="image-box">
+                <span>Start Frame</span>
+                <img
+                  src="https://cdn-media.sforum.vn/storage/app/media/ctvseo_maihue/hinh-nen-1920-1080/hinh-nen-1920-1080-thumbnail.jpg"
+                  class="thumbnail"
+                  onclick="triggerUpload(this)"
+                  style="cursor: pointer"
+                />
+                <input
+                  type="file"
+                  name="start_images[]"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this)"
+                />
+              </div>
+                    <span class="material-symbols-outlined arrow-sep">sync_alt</span>
+              <div class="image-box end-frame-box">
+                <span>End Frame</span>
+                <img
+                  src="https://cdn-media.sforum.vn/storage/app/media/thunguyen/hinh-nen-vui-ve-2.jpg"
+                  class="thumbnail"
+                  onclick="triggerUpload(this)"
+                  style="cursor: pointer"
+                />
+                <input
+                  type="file"
+                  name="end_images[]"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this)"
+                />
+              </div>
+              <textarea
+                name="prompts[]"
+                class="prompt-area"
+                placeholder="Nhập prompt..."
+              ></textarea>                </div>
+            </div>`;
+        list.insertAdjacentHTML("beforeend", frameHTML);
+      }
+
+      function removeFrame(id) {
+        document.getElementById(`group-${id}`).remove();
+      }
+      function clearAll() {
+        document.querySelectorAll(".extra-frame").forEach((el) => el.remove());
+      }
+      function triggerUpload(img) {
+        img.nextElementSibling.click();
+      }
+      function previewImage(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            input.previousElementSibling.src = e.target.result;
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
+  </body>
+</html>

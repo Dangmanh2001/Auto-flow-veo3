@@ -1,5 +1,0 @@
-2026/03/06-15:19:14.808 1f1c Reusing MANIFEST C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Profile 49\IndexedDB\https_labs.google_0.indexeddb.leveldb/MANIFEST-000001
-2026/03/06-15:19:14.809 1f1c Recovering log #691
-2026/03/06-15:19:14.809 1f1c Reusing old log C:\Users\Admin\Desktop\My-app\my-app\flow-profile\Profile 49\IndexedDB\https_labs.google_0.indexeddb.leveldb/000691.log 
-2026/03/06-15:19:14.810 1f1c Delete type=2 #689
-2026/03/06-15:19:14.838 2820 Manual compaction at level-0 from '\x00\xec\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\xed\x00\x00\x00' @ 0 : 0; will stop at (end)

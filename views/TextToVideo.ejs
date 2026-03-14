@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gửi Ảnh và Prompts</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
+    />
+    <style>
+      :root {
+        --bg-dark: #1a1c1e;
+        --card-bg: #212429;
+        --border-color: #3f444c;
+        --text-main: #e2e2e2;
+        --text-dim: #9aa0a6;
+        --accent-blue: #4d94ff;
+        --accent-green: #81c995;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+
+      h1 {
+        font-weight: 400;
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 30px;
+      }
+
+      /* Container chính của Form */
+      #uploadForm {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 12px;
+        font-weight: 500;
+        color: var(--text-dim);
+        font-size: 14px;
+      }
+
+      /* Style Textarea nền tối */
+      textarea {
+        width: 100%;
+        padding: 15px;
+        background-color: #131517;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        color: #fff;
+        font-family: "Consolas", monospace; /* Font chữ máy tính cho prompt */
+        font-size: 14px;
+        line-height: 1.5;
+        resize: vertical;
+        box-sizing: border-box;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      textarea:focus {
+        border-color: var(--accent-blue);
+      }
+
+      /* Style vùng kéo thả File (Drop Zone) */
+      .drop-zone {
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.02);
+        color: var(--text-dim);
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .drop-zone:hover {
+        border-color: var(--accent-blue);
+        background-color: rgba(77, 148, 255, 0.05);
+        color: var(--text-main);
+      }
+
+      .drop-zone.drag-over {
+        background-color: rgba(129, 201, 149, 0.1);
+        border-color: var(--accent-green);
+        color: var(--accent-green);
+      }
+
+      .drop-zone b {
+        color: var(--accent-blue);
+      }
+
+      /* Nút Gửi kiểu Google Labs */
+      input[type="submit"] {
+        padding: 12px 30px;
+        background-color: var(--accent-blue);
+        color: #000;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+      }
+
+      input[type="submit"]:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      small {
+        display: block;
+        margin-top: 8px;
+        color: var(--text-dim);
+        font-size: 12px;
+      }
+
+      /* Preview và các nút khác */
+      .preview {
+        margin-top: 20px;
+      }
+
+      #clearAll {
+        background: none;
+        border: 1px solid #ff6b6b;
+        color: #ff6b6b;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      #clearAll:hover {
+        background-color: rgba(255, 107, 107, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Prompts</h1>
+
+    <form
+      id="uploadForm"
+      action="/api"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label for="prompts">Nhập Prompts :</label>
+        <div id="promptDropZone" class="drop-zone">
+          <p>Kéo thả file <b>.txt</b> vào đây hoặc <b>Click để chọn file</b></p>
+          <input
+            type="file"
+            id="promptFileInp"
+            accept=".txt"
+            style="display: none"
+          />
+        </div>
+        <textarea
+          id="prompts"
+          name="prompts"
+          rows="6"
+          placeholder="Prompt 1&#10;Prompt 2&#10;Prompt 3..."
+          required
+        ></textarea>
+        <small>Mẹo: Nhấn Enter để xuống dòng cho mỗi prompt mới.</small>
+      </div>
+
+      <div class="form-group" style="text-align: right">
+        <input type="submit" value="Gửi Tất Cả" />
+      </div>
+    </form>
+
+    <div class="preview" id="preview"></div>
+    <button type="button" id="clearAll" style="margin-top: 10px; display: none">
+      Xóa tất cả ảnh
+    </button>
+
+    <script>
+      // GIỮ NGUYÊN TOÀN BỘ LOGIC JAVASCRIPT CỦA BẠN
+      const promptDropZone = document.getElementById("promptDropZone");
+      const promptFileInp = document.getElementById("promptFileInp");
+      const promptsTextarea = document.getElementById("prompts");
+
+      promptDropZone.addEventListener("click", () => promptFileInp.click());
+
+      promptDropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        promptDropZone.classList.add("drag-over");
+      });
+
+      ["dragleave", "drop"].forEach((type) => {
+        promptDropZone.addEventListener(type, () => {
+          promptDropZone.classList.remove("drag-over");
+        });
+      });
+
+      promptDropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        handlePromptFile(file);
+      });
+
+      promptFileInp.addEventListener("change", (e) => {
+        handlePromptFile(e.target.files[0]);
+      });
+
+      function handlePromptFile(file) {
+        if (file && file.type === "text/plain") {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            promptsTextarea.value = e.target.result;
+          };
+          reader.readAsText(file);
+        } else {
+          alert("Vui lòng chỉ sử dụng file định dạng .txt");
+        }
+      }
+    </script>
+  </body>
+</html>
